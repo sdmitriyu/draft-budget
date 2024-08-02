@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Планировщик доходов</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { border: 1px solid #dddddd; text-align: left; padding: 8px; }
+        th { background-color: #f2f2f2; cursor: pointer; }
+        .entry { margin-top: 10px; }
+        .result { margin-top: 20px; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <h1>Планировщик доходов</h1>
+
+    <div class="entry">
+        <form method="post" action="{% url 'add_income' %}">
+
+
+            {% csrf_token %}
+            <label for="incomeAmount">Введите сумму дохода:</label>
+            <input type="number" id="incomeAmount" name="incomeAmount" placeholder="Сумма дохода" required>
+            <button type="submit">Добавить доход</button>
+        </form>
+    </div>
+
+    <div class="entry">
+        <form method="post" action="{% url 'add_expense' %}">
+            {% csrf_token %}
+            <label for="expenseDate">Дата:</label>
+            <input type="date" id="expenseDate" name="expenseDate" required>
+            <label for="expenseAmount">Сумма траты:</label>
+            <input type="number" id="expenseAmount" name="expenseAmount" placeholder="Сумма траты" required>
+            <label for="expenseDescription">Описание:</label>
+            <input type="text" id="expenseDescription" name="expenseDescription" placeholder="Описание траты" required>
+            <button type="submit">Добавить расход</button>
+        </form>
+    </div>
+
+    <h2>Сводка доходов:</h2>
+    <table id="incomeTable">
+        <thead>
+            <tr>
+                <th>Дата</th>
+                <th>Сумма</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for income in incomes %}
+            <tr>
+                <td>{{ income.date }}</td>
+                <td>{{ income.amount }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <h2>Сводка трат:</h2>
+    <table id="expensesTable">
+        <thead>
+            <tr>
+                <th>Дата</th>
+                <th>Сумма</th>
+                <th>Описание</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for expense in expenses %}
+            <tr>
+                <td>{{ expense.date }}</td>
+                <td>{{ expense.amount }}</td>
+                <td>{{ expense.description }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <div id="totalRemaining" class="result">
+        Оставшиеся деньги: <span id="remainingAmount">{{ remaining }}</span> руб.
+    </div>
+    <div id="totalIncome" class="result">
+        Общая сумма доходов: <span id="totalIncomeAmount">{{ total_income }}</span> руб.
+    </div>
+    <div id="totalExpenses" class="result">
+        Общая сумма трат: <span id="totalAmount">{{ total_expense }}</span> руб.
+    </div>
+</body>
+</html>
